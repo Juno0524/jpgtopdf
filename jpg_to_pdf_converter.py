@@ -535,13 +535,22 @@ class JpgToPdfConverterApp:
             )
             btn_col.grid(row=row, column=0, sticky="w", pady=(0, 3))
             
-            lbl = tk.Label(main, text="Drop file here", bg=TOSS_BG_LIGHT, fg=TOSS_TEXT_SUB, font=("Apple SD Gothic Neo", 9), relief="flat", height=1)
+            lbl = ctk.CTkLabel(
+                main, 
+                text="Drop file here", 
+                fg_color=TOSS_BG_LIGHT, 
+                text_color=TOSS_TEXT_SUB, 
+                font=("Apple SD Gothic Neo", 10), 
+                corner_radius=6,
+                width=150,
+                height=34
+            )
             lbl.grid(row=row, column=1, sticky="we", padx=(10, 0), pady=(0, 3))
             if img_num == 1: self.lbl_img1 = lbl
             else: self.lbl_img2 = lbl
             
             row += 1
-            ctk.CTkLabel(main, text=label_text, font=font_label, text_color=TOSS_TEXT_MAIN).grid(row=row, column=0, sticky="w")
+            ctk.CTkLabel(main, text=label_text, font=font_label, text_color=TOSS_TEXT_MAIN, width=120, anchor="w").grid(row=row, column=0, sticky="w")
             entry = ctk.CTkEntry(
                 main, 
                 textvariable=(self.amount1 if img_num == 1 else self.amount2),
