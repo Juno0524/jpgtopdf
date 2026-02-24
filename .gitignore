@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Configuration & Local files
+config.ini
+*.pdf
+*.jpg
+*.jpeg
+
+# IDEs
+.vscode/
+.idea/
