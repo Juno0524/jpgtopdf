@@ -79,7 +79,9 @@ class JpgToPdfConverterApp:
         self.amount2 = tk.StringVar(value="0")
         self.total_amount = tk.StringVar(value="0")
         self.selected_campaign = tk.StringVar(value="N922")
+        self.selected_usage = tk.StringVar(value="Pickup/Delivery")
         self.campaign_btns = {}  # 캠페인 버튼 객체 저장용
+        self.usage_btns = {}     # 사용 내용 버튼 객체 저장용
 
         self.amount1.trace_add("write", self.calculate_total)
         self.amount2.trace_add("write", self.calculate_total)
@@ -87,6 +89,7 @@ class JpgToPdfConverterApp:
         self.create_widgets()
         # 초기 활성화 상태 표시
         self.root.after(100, lambda: self.update_campaign_button_ui("N922"))
+        self.root.after(100, lambda: self.update_usage_button_ui("Pickup/Delivery"))
 
     def load_config(self):
         default_geometry = "600x680"
@@ -122,7 +125,7 @@ class JpgToPdfConverterApp:
     def update_result_text(self, event=None):
         if hasattr(self, 'result_text'):
             cc = self.selected_campaign.get()
-            uc = self.usage_content.get()
+            uc = self.selected_usage.get()
             pd = self.pickup_date.get()
             dd = self.delivery_date.get()
             
@@ -159,6 +162,19 @@ class JpgToPdfConverterApp:
         for code, btn in self.campaign_btns.items():
             if code == active_code:
                 btn.configure(fg_color=TOSS_BLUE, text_color="white")  # 토스 블루 색상
+            else:
+                btn.configure(fg_color=TOSS_GRAY_BTN, text_color=TOSS_TEXT_MAIN)
+
+    def set_usage(self, usage):
+        self.selected_usage.set(usage)
+        self.update_usage_button_ui(usage)
+        self.update_result_text()
+        self.add_result_message(f"Usage set to: {usage}")
+
+    def update_usage_button_ui(self, active_usage):
+        for usage, btn in self.usage_btns.items():
+            if usage == active_usage:
+                btn.configure(fg_color=TOSS_BLUE, text_color="white")
             else:
                 btn.configure(fg_color=TOSS_GRAY_BTN, text_color=TOSS_TEXT_MAIN)
 
@@ -464,22 +480,26 @@ class JpgToPdfConverterApp:
 
         row += 1
         ctk.CTkLabel(main, text="2. Usage", font=font_label, text_color=TOSS_TEXT_MAIN).grid(row=row, column=0, sticky="w", pady=(0, 1))
-        self.usage_content = ctk.CTkOptionMenu(
-            main, 
-            values=["Pickup/Delivery", "Pickup", "Delivery"], 
-            width=200, 
-            height=32,
-            corner_radius=8,
-            fg_color=TOSS_GRAY_BTN,
-            text_color=TOSS_TEXT_MAIN,
-            button_color=TOSS_GRAY_BTN,
-            button_hover_color="#e5e8eb",
-            font=font_entry,
-            command=lambda _: self.update_result_text()
-        )
-        self.usage_content.grid(row=row+1, column=0, columnspan=2, sticky="w", pady=(0, 6))
-        self.usage_content.set("Pickup/Delivery")
-        row += 2
+        
+        row += 1
+        usage_frame = ctk.CTkFrame(main, fg_color="transparent")
+        usage_frame.grid(row=row, column=0, columnspan=2, sticky="w", pady=(0, 6))
+        for usage in ["Pickup/Delivery", "Pickup", "Delivery"]:
+            btn = ctk.CTkButton(
+                usage_frame,
+                text=usage,
+                width=100,
+                height=32,
+                corner_radius=8,
+                font=font_entry,
+                command=lambda u=usage: self.set_usage(u),
+                fg_color=TOSS_GRAY_BTN,
+                text_color=TOSS_TEXT_MAIN,
+                hover_color="#e5e8eb"
+            )
+            btn.pack(side="left", padx=(0, 6))
+            self.usage_btns[usage] = btn
+        row += 1
 
         # 날짜 영역 (가로 배치로 높이 절약)
         date_frame = ctk.CTkFrame(main, fg_color="transparent")
