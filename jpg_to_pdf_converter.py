@@ -340,12 +340,12 @@ class JpgToPdfConverterApp:
         if lower.endswith((".jpg", ".jpeg")):
             if img_num == 1:
                 self.image1_path.set(file_path)
-                self.lbl_img1.config(text=os.path.basename(file_path), bg="#d9f7d9")
+                self.lbl_img1.configure(text=os.path.basename(file_path), bg="#d9f7d9")
                 self.extract_and_set_amount(file_path, self.amount1)
                 self.extract_and_set_date(file_path, self.pickup_date)
             else:
                 self.image2_path.set(file_path)
-                self.lbl_img2.config(text=os.path.basename(file_path), bg="#d9f7d9")
+                self.lbl_img2.configure(text=os.path.basename(file_path), bg="#d9f7d9")
                 self.extract_and_set_amount(file_path, self.amount2)
                 self.extract_and_set_date(file_path, self.delivery_date)
             self.add_result_message(f"Upload: {os.path.basename(file_path)}")
@@ -353,10 +353,10 @@ class JpgToPdfConverterApp:
 
         if lower.endswith(".pdf"):
             if img_num == 1:
-                self.lbl_img1.config(text=os.path.basename(file_path), bg="#fff6cc")
+                self.lbl_img1.configure(text=os.path.basename(file_path), bg="#fff6cc")
                 self.extract_and_set_date_from_pdf(file_path, self.pickup_date)
             else:
-                self.lbl_img2.config(text=os.path.basename(file_path), bg="#fff6cc")
+                self.lbl_img2.configure(text=os.path.basename(file_path), bg="#fff6cc")
                 self.extract_and_set_date_from_pdf(file_path, self.delivery_date)
             self.add_result_message("PDF handled for date extraction only")
             return
@@ -535,15 +535,15 @@ class JpgToPdfConverterApp:
             )
             btn_col.grid(row=row, column=0, sticky="w", pady=(0, 3))
             
-            lbl = ctk.CTkLabel(
+            # 드래그 앤 드롭 호환성을 위해 tk.Label로 유지하되 스타일 조정
+            lbl = tk.Label(
                 main, 
                 text="Drop file here", 
-                fg_color=TOSS_BG_LIGHT, 
-                text_color=TOSS_TEXT_SUB, 
+                bg=TOSS_BG_LIGHT, 
+                fg=TOSS_TEXT_SUB, 
                 font=("Apple SD Gothic Neo", 10), 
-                corner_radius=6,
-                width=150,
-                height=34
+                relief="flat",
+                height=2 # CTkButton 높이와 맞춤
             )
             lbl.grid(row=row, column=1, sticky="we", padx=(10, 0), pady=(0, 3))
             if img_num == 1: self.lbl_img1 = lbl
